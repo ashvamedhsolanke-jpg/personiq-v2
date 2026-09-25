@@ -1,0 +1,11 @@
+PersonIQ V2 source package
+
+The complete project is contained in personiq-v2.tar.gz.
+Extract that archive to access the Next.js/TypeScript source code.
+
+For another ChatGPT account:
+1. Upload this ZIP.
+2. Ask ChatGPT to extract/inspect personiq-v2.tar.gz.
+3. Say: "This is my PersonIQ V2 project. Inspect the entire source code and continue development from the existing project. Do not replace it with a mockup or hardcoded demo."
+
+Required environment variables are documented in the project README/.env.example.

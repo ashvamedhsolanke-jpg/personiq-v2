@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>PersonIQ — AI Person Research</title>
+<style>
+*{box-sizing:border-box}body{margin:0;font-family:Inter,system-ui,-apple-system,Segoe UI,sans-serif;background:#f6f7fb;color:#15171c}
+.container{max-width:1050px;margin:auto;padding:22px}
+header{display:flex;justify-content:space-between;align-items:center;padding:10px 0 28px}
+.logo{font-size:22px;font-weight:800;letter-spacing:-.5px}.logo span{color:#6257ee}
+.badge{font-size:12px;background:#eceafd;color:#5146d8;padding:7px 11px;border-radius:999px;font-weight:700}
+.hero{text-align:center;padding:52px 10px 34px}.hero h1{font-size:clamp(38px,7vw,68px);line-height:1.02;margin:0 0 18px;letter-spacing:-3px}
+.hero p{color:#6d717c;font-size:17px;margin:0 auto 28px;max-width:600px}
+.search{display:flex;max-width:700px;margin:auto;background:white;border:1px solid #e2e4eb;border-radius:18px;padding:7px;box-shadow:0 12px 35px #20243a10}
+.search input{flex:1;border:0;outline:0;font-size:16px;padding:14px;background:transparent;min-width:0}.search button{border:0;background:#17181d;color:white;border-radius:13px;padding:0 22px;font-weight:700;cursor:pointer}
+.examples{text-align:center;color:#858894;font-size:13px;margin-top:13px}.examples button{border:0;background:none;color:#6257ee;cursor:pointer}
+#result{display:none;margin-top:28px}.profile{background:white;border:1px solid #e5e6ec;border-radius:24px;padding:25px;box-shadow:0 10px 30px #20243a08}
+.profiletop{display:flex;gap:18px;align-items:center}.avatar{width:72px;height:72px;border-radius:20px;background:linear-gradient(135deg,#6257ee,#9b8cff);display:grid;place-items:center;color:white;font-size:27px;font-weight:800}
+h2{margin:0;font-size:28px}.role{color:#70737d;margin-top:5px}.chips{display:flex;gap:8px;flex-wrap:wrap;margin-top:15px}.chip{background:#f0f1f6;padding:7px 10px;border-radius:9px;font-size:12px;color:#555963}
+.grid{display:grid;grid-template-columns:repeat(2,1fr);gap:14px;margin-top:14px}.card{background:white;border:1px solid #e5e6ec;border-radius:20px;padding:21px}.card h3{margin:0 0 13px;font-size:16px}.card p,.card li{color:#626671;line-height:1.6;font-size:14px}.facts{display:grid;grid-template-columns:repeat(2,1fr);gap:10px}.fact{background:#f7f7fa;border-radius:12px;padding:12px}.fact b{display:block;font-size:13px}.fact span{color:#727681;font-size:12px}
+.sources a{color:#6257ee;text-decoration:none;display:block;margin:8px 0;font-size:13px}
+.note{margin-top:18px;text-align:center;color:#858894;font-size:12px}
+.loading{padding:40px;text-align:center;color:#6d717c}
+@media(max-width:700px){.grid{grid-template-columns:1fr}.hero{padding-top:30px}.search button{padding:0 15px}.profiletop{align-items:flex-start}.facts{grid-template-columns:1fr}}
+</style>
+</head>
+<body>
+<div class="container">
+<header><div class="logo">Person<span>IQ</span></div><div class="badge">AI RESEARCH</div></header>
+
+<section class="hero">
+<h1>Know the person.<br><span style="color:#6257ee">Beyond the basics.</span></h1>
+<p>Search a person and explore their background, career, achievements, work, and publicly documented information — organized in one clean profile.</p>
+<div class="search">
+<input id="q" placeholder="Search any person…" onkeydown="if(event.key==='Enter')search()">
+<button onclick="search()">Search</button>
+</div>
+<div class="examples">Try <button onclick="demo('Elon Musk')">Elon Musk</button> · <button onclick="demo('A. P. J. Abdul Kalam')">A. P. J. Abdul Kalam</button> · <button onclick="demo('Marie Curie')">Marie Curie</button></div>
+</section>
+
+<section id="result"></section>
+<div class="note">Prototype: information shown below is demo content. A production version would connect to live, cited sources and an AI research backend.</div>
+</div>
+
+<script>
+const data={
+"elon musk":{name:"Elon Musk",role:"Entrepreneur, engineer & investor",tags:["Technology","Business","Space"],facts:[["Known for","Tesla, SpaceX, xAI"],["Born","June 28, 1971"],["Nationality","South African-born American"],["Fields","Technology · Space · AI"]],bio:"A technology entrepreneur associated with companies including SpaceX, Tesla, Neuralink, The Boring Company and xAI.",career:["Founded SpaceX in 2002.","Joined Tesla as an early investor and later became its CEO.","Founded or co-founded several technology ventures."],ach:["Development of reusable rocket technology through SpaceX.","Expansion of electric-vehicle production at Tesla.","Work in artificial intelligence and brain-computer interfaces."],sources:["https://www.spacex.com/","https://www.tesla.com/"]},
+"a. p. j. abdul kalam":{name:"A. P. J. Abdul Kalam",role:"Scientist & former President of India",tags:["Science","India","Public Service"],facts:[["Known for","Indian space & missile programmes"],["Born","October 15, 1931"],["Died","July 27, 2015"],["Fields","Aerospace · Public service"]],bio:"Indian aerospace scientist who served as the 11th President of India and was widely known for his work in India's space and defence programmes.",career:["Worked with DRDO and ISRO.","Played a major role in India's civilian space and missile development programmes.","Served as President of India from 2002 to 2007."],ach:["Contributed to India's launch-vehicle and strategic missile programmes.","Received the Bharat Ratna, India's highest civilian award."],sources:["https://www.presidentofindia.gov.in/"]},
+"marie curie":{name:"Marie Curie",role:"Physicist & chemist",tags:["Science","Physics","Chemistry"],facts:[["Known for","Research on radioactivity"],["Born","November 7, 1867"],["Died","July 4, 1934"],["Fields","Physics · Chemistry"]],bio:"Polish-born physicist and chemist whose research on radioactivity led to major advances in modern science.",career:["Conducted pioneering research into radioactivity with Pierre Curie.","Became the first woman to win a Nobel Prize.","Later won a second Nobel Prize in Chemistry."],ach:["Nobel Prize in Physics (1903).","Nobel Prize in Chemistry (1911)."],sources:["https://www.nobelprize.org/prizes/physics/1903/marie-curie/"]}};
+
+function demo(name){document.getElementById('q').value=name;search()}
+function search(){
+ const q=document.getElementById('q').value.trim(); if(!q)return;
+ const box=document.getElementById('result'); box.style.display='block';
+ const d=data[q.toLowerCase()];
+ if(!d){box.innerHTML=`<div class="profile loading"><b>Prototype search</b><br><br>“${escape(q)}” isn't in the demo dataset yet.<br>A production version will use an AI + live-source research backend to build the profile.</div>`;return}
+ box.innerHTML=`<div class="profile">
+ <div class="profiletop"><div class="avatar">${d.name.split(' ').map(x=>x[0]).slice(0,2).join('')}</div><div><h2>${d.name}</h2><div class="role">${d.role}</div><div class="chips">${d.tags.map(x=>`<span class="chip">${x}</span>`).join('')}</div></div></div>
+ <div class="grid">
+ <div class="card"><h3>Quick facts</h3><div class="facts">${d.facts.map(x=>`<div class="fact"><b>${x[0]}</b><span>${x[1]}</span></div>`).join('')}</div></div>
+ <div class="card"><h3>Overview</h3><p>${d.bio}</p></div>
+ <div class="card"><h3>Career</h3><ul>${d.career.map(x=>`<li>${x}</li>`).join('')}</ul></div>
+ <div class="card"><h3>Major achievements</h3><ul>${d.ach.map(x=>`<li>${x}</li>`).join('')}</ul></div>
+ <div class="card sources"><h3>Sources</h3>${d.sources.map(x=>`<a href="${x}" target="_blank">${x}</a>`).join('')}</div>
+ </div></div>`;
+ box.scrollIntoView({behavior:'smooth',block:'start'});
+}
+function escape(s){return s.replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#039;'}[c]))}
+</script>
+</body>
+</html>
